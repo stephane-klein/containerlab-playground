@@ -208,3 +208,9 @@ Containerlab may not be suitable for this need.
 It might be wise to explore the other alternatives mentioned in https://brianlinkletter.com/2024/02/open-source-network-simulation-roundup-2024/  
 
 Alternatively, this issue could potentially address my objective in the future: https://github.com/srl-labs/containerlab/issues/2513 
+
+## Teardown
+
+```
+$ sudo containerlab destroy
+```
