@@ -1,6 +1,9 @@
 # Containerlab playground
 
-More information, see: https://notes.sklein.xyz/2025-07-20_1241/
+More information, see these notes:
+
+- https://notes.sklein.xyz/2025-07-20_1241/
+- https://notes.sklein.xyz/2025-07-24_2231/
 
 ```sh
 $ sudo dnf config-manager addrepo --set=baseurl="https://netdevops.fury.site/yum/" && \
