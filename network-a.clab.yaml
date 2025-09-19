@@ -1,0 +1,37 @@
+# network-a.clab.yaml
+name: network-a
+
+mgmt:
+  network: network-a
+  ipv6-subnet: 2001:db8:a:1::0/64
+
+topology:
+  nodes:
+    br01|vm-a1:
+      kind: bridge
+      network-mode: container:vm-a1
+
+    vm-a1:
+      kind: linux
+      # image: alpine-ssh
+      # https://hub.docker.com/r/mitchv85/ohv-host
+      image: mitchv85/ohv-host
+      mgmt-ipv6: 2001:db8:a:1::2
+
+    vm-a2:
+      kind: linux
+      image: mitchv85/ohv-host
+      mgmt-ipv6: 2001:db8:a:1::3
+
+    vm-a3:
+      kind: linux
+      image: mitchv85/ohv-host
+      mgmt-ipv6: 2001:db8:a:1::4
+
+  kinds:
+    linux:
+      binds:
+        - ./authorized_keys:/home/admin/.ssh/authorized_keys
+      sysctls:
+        net.ipv6.conf.all.disable_ipv6: 0
+        net.ipv6.conf.default.disable_ipv6: 0

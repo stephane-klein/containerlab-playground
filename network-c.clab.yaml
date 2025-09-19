@@ -1,36 +1,33 @@
-name: network-a-b
+# network-a.clab.yaml
+name: network-c
 
 mgmt:
-  network: net-custom
-  ipv6-subnet: 2001:db8:a::0/48
+  network: network-c
+  ipv6-subnet: 2001:db8:b::0/48
 
 topology:
   nodes:
-    vm-a1:
+    vm-c1:
       kind: linux
       # image: alpine-ssh
       # https://hub.docker.com/r/mitchv85/ohv-host
       image: mitchv85/ohv-host
-      mgmt-ipv6: 2001:db8:a:1::1
-      # Here I don't know how to specify: 2001:db8:a:1::1/64
+      mgmt-ipv6: 2001:db8:b:1::4
 
-    vm-a2:
+    vm-c2:
       kind: linux
       image: mitchv85/ohv-host
-      mgmt-ipv6: 2001:db8:a:1::2
-      # Here I don't know how to specify: 2001:db8:a:1::2/64
+      mgmt-ipv6: 2001:db8:b:1::2
 
-    vm-a3:
+    vm-c3:
       kind: linux
       image: mitchv85/ohv-host
-      mgmt-ipv6: 2001:db8:a:1::3
-      # Here I don't know how to specify: 2001:db8:a:1::3/64
+      mgmt-ipv6: 2001:db8:b:2::1
 
-    vm-b1:
+    vm-d3:
       kind: linux
       image: mitchv85/ohv-host
-      mgmt-ipv6: 2001:db8:a:2::5
-      # Here I don't know how to specify: 2001:db8:a:2::5/64
+      mgmt-ipv6: 2001:db8:b:2::1:3
 
   kinds:
     linux:
