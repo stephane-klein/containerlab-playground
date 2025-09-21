@@ -97,7 +97,9 @@ sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd
 cat << 'EOF'
 ```
 
-I am performing ping tests between ‘vm-a1’ and ‘vm-a2’ on the same network:
+## Ping performing on `2001:db8...` subnet
+
+I am performing ping tests between `vm-a1` and `vm-a2` on the same network:
 
 ```sh
 $ sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd 'ping -6 -c 1 -q "2001:db8:a:1::3"'
@@ -108,7 +110,7 @@ sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd
 cat << 'EOF'
 ```
 
-I am performing ping tests between ‘vm-a1’ and ‘vm-b1’ on two different network:
+I am performing ping tests between `vm-a1` and `vm-b1` on two different network:
 
 ```sh
 $ sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd 'ping -6 -c 1 -q "2001:db8:a:2::5"'
@@ -138,8 +140,38 @@ EOF
 
 sudo ip -6 route show | grep "2001:db8:a:"
 
+export IPV6_LINK_LOCAL_A2=$(sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a2 --cmd 'ip -6 addr show eth0' -f json 2>/dev/null | jq -r '."clab-network-a-vm-a2"[0].stdout' | grep "inet6 fe80" | awk '{print $2}' | cut -d'/' -f1)
+
+export IPV6_LINK_LOCAL_B2=$(sudo containerlab exec -t network-b.clab.yaml --label clab-node-name=vm-b2 --cmd 'ip -6 addr show eth0' -f json 2>/dev/null | jq -r '."clab-network-b-vm-b2"[0].stdout' | grep "inet6 fe80" | awk '{print $2}' | cut -d'/' -f1)
+
+cat << EOF
+\`\`\`
+
+## Ping performing on \`fe80::...\` Link-Local
+
+I am performing ping tests between \`vm-a1\` to \`vm-a2\` on the same network, with Link-Local IP address:
+
+\`\`\`sh
+$ sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd 'ping -6 -c1 "${IPV6_LINK_LOCAL_A2}" -I "eth0"'
+EOF
+
+sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd "ping -6 -c1 '${IPV6_LINK_LOCAL_A2}' -I 'eth0'"
+
+cat << EOF
+\`\`\`
+
+Now, I try to perform a ping between \`vm-a1\` to \`vm-b2\`, with Link-Local IP address:
+
+\`\`\`sh
+$ sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd 'ping -6 -c1 "${IPV6_LINK_LOCAL_B2}" -I "eth0"'
+EOF
+
+sudo containerlab exec -t network-a.clab.yaml --label clab-node-name=vm-a1 --cmd "ping -6 -c1 '${IPV6_LINK_LOCAL_B2}' -I 'eth0'"
+
 cat << 'EOF'
 ```
+
+but this is a failure, because it is not possible to reach another network with a Link-Local IP address.
 
 ## Teardown
 
